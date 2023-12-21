@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "DHT.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,7 +71,6 @@ uint8_t processUserInput(uint8_t opt);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  uint8_t opt = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -94,18 +93,28 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  printMessage:
-      printWelcomeMessage();
+
+  static DHT_sensor livingRoom = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	opt = readUserInput();
-	processUserInput(opt);
-	if(opt == 3)
-	  goto printMessage;
+	HAL_Delay(1000);
+	//Буффер для печати текста
+	char msg[40];
+
+	//Получение данных с датчика
+	DHT_data d = DHT_getData(&livingRoom);
+
+	//Печать данных в буффер
+	sprintf(msg, "\fLiving room: Temp %d°C, Hum %d%%", (uint8_t)d.temp, (uint8_t)d.hum);
+
+	//Отправка текста в UART
+	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFF);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -220,6 +229,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
