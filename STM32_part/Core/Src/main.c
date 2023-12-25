@@ -56,12 +56,12 @@ static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void printWelcomeMessage(void);
 uint8_t readUserInput(void);
-uint8_t processUserInput(uint8_t opt);
+uint8_t processUserInput(uint8_t, DHT_data d);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//static DHT_sensor livingRoom = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
 /* USER CODE END 0 */
 
 /**
@@ -93,28 +93,26 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  static DHT_sensor livingRoom = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
+  DHT_sensor dht11_sensor = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
+  DHT_data data;
+  char msg[40];
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+  while(1)
   {
-	HAL_Delay(1000);
-	//Буффер для печати текста
-	char msg[40];
-
+	HAL_Delay(5000);
 	//Получение данных с датчика
-	DHT_data d = DHT_getData(&livingRoom);
-
+	data = DHT_getData(&dht11_sensor);
 	//Печать данных в буффер
-	sprintf(msg, "\fLiving room: Temp %d°C, Hum %d%%", (uint8_t)d.temp, (uint8_t)d.hum);
-
+	sprintf(msg, "\n\r%d %d", (uint8_t)data.temp, (uint8_t)data.hum);
 	//Отправка текста в UART
 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFF);
-
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+	HAL_Delay(300);
+	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -182,7 +180,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 38400;
+  huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -252,31 +250,41 @@ void printWelcomeMessage(void)
 uint8_t readUserInput(void)
 {
   char readBuf[1];
-  HAL_UART_Transmit(&huart2, (uint8_t*)"Your chice: ", strlen("Your chice: "), HAL_MAX_DELAY);
+  HAL_UART_Transmit(&huart2, (uint8_t*)"\n\rYour chice: ", strlen("\n\rYour chice: "), HAL_MAX_DELAY);
   HAL_UART_Receive(&huart2, (uint8_t*)readBuf, 1, HAL_MAX_DELAY);
   return atoi(readBuf);
 }
 
-uint8_t processUserInput(uint8_t opt)
+uint8_t processUserInput(uint8_t opt, DHT_data d)
 {
-  char msg[30];
-  if(!opt || opt > 3)
-    return 0;
+  char msg[40];
+  //DHT_sensor livingRoom = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
+  //char msg[30];
+  //if(!opt || opt > 3)
+    //return 0;
 
-  sprintf(msg, "%d", opt);
-  HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+  //sprintf(msg, "%d", opt);
+  //HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
   switch(opt)
   {
     case 1:
       HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
       break;
     case 2:
-      sprintf(msg, "\r\nUSER BUTTON status: %s",
-        HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13) == GPIO_PIN_RESET ? "PRESSED" : "RELEASED");
+      //static DHT_sensor livingRoom = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
+      //Получение данных с датчика
+      //DHT_data d = DHT_getData(&livingRoom);
+      //Печать данных в буффер
+      sprintf(msg, "\n\rLiving room: Temp %d°C, Hum %d%%", (uint8_t)d.temp, (uint8_t)d.hum);
+      //Отправка текста в UART
+      //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+      //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
       HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+      //HAL_Delay(300);
+      //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
       break;
-    case 3:
-      return 2;
+    //default:
+      //break;
   };
 
   return 1;
