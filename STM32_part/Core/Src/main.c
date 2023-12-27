@@ -96,6 +96,7 @@ int main(void)
   DHT_sensor dht11_sensor = {GPIOB, GPIO_PIN_4, DHT11, GPIO_NOPULL};
   DHT_data data;
   char msg[40];
+  uint8_t opt = 0;
 
   /* USER CODE END 2 */
 
@@ -103,16 +104,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while(1)
   {
-	HAL_Delay(5000);
+
+	HAL_Delay(1000);
 	//Получение данных с датчика
 	data = DHT_getData(&dht11_sensor);
 	//Печать данных в буффер
-	sprintf(msg, "\n\r%d %d", (uint8_t)data.temp, (uint8_t)data.hum);
+	//sprintf(msg, "\n\r%d %d", (uint8_t)data.temp, (uint8_t)data.hum);
 	//Отправка текста в UART
+	//HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFF);
+	sprintf(msg, "%d %d", (uint8_t)data.temp, (uint8_t)data.hum);
 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFF);
+	//sprintf(msg, "%c", (uint8_t)data.hum);
+	//HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFF);
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
 	HAL_Delay(300);
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -250,7 +257,7 @@ void printWelcomeMessage(void)
 uint8_t readUserInput(void)
 {
   char readBuf[1];
-  HAL_UART_Transmit(&huart2, (uint8_t*)"\n\rYour chice: ", strlen("\n\rYour chice: "), HAL_MAX_DELAY);
+  //HAL_UART_Transmit(&huart2, (uint8_t*)"\n\rYour chice: ", strlen("\n\rYour chice: "), HAL_MAX_DELAY);
   HAL_UART_Receive(&huart2, (uint8_t*)readBuf, 1, HAL_MAX_DELAY);
   return atoi(readBuf);
 }
