@@ -5,6 +5,7 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 #include"settingwindow.h"
+#include "dbmanager.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,6 +22,7 @@ public:
 
 private slots:
     void on_save_measurement_triggered();
+    void on_plot_measurement_triggered();
     void on_set_com_triggered();
     void on_about_triggered();
     void serialRecieve();
@@ -29,6 +31,7 @@ private:
     Ui::MainWindow* ui;
     SettingWindow* setting_window;
     QSerialPort* serial;
+    DbManager db;
     QString buffer;
     QString code;
     int codeSize;

@@ -4,14 +4,17 @@
 #include <QPalette>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-
+#include "dbmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     setting_window = new SettingWindow();
+
+    //DbManager db;
 
     // Фиксированный размер окна
     setFixedSize(width(), height());
@@ -38,10 +41,13 @@ MainWindow::MainWindow(QWidget *parent)
     QAction* seve_measurements = new QAction(savepix,"Сохранить измерения", this);
     menu_1->addAction(seve_measurements);
     connect(seve_measurements, &QAction::triggered, this, &MainWindow::on_save_measurement_triggered);
+
     // Построить график
     QPixmap plotpix("D:/projects/WeatherMonitor/QT_part/res/img/graph.png");
     QAction* plot_graph = new QAction(plotpix, "Построить график", this);
     menu_1->addAction(plot_graph);
+    connect(plot_graph, &QAction::triggered, this, &MainWindow::on_plot_measurement_triggered);
+
     // Настройка COM
     QPixmap compix("D:/projects/WeatherMonitor/QT_part/res/img/comport.png");
     QAction* set_com = new QAction(compix, "Настройка COM", this);
@@ -59,33 +65,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Настройка COM ********************************************************
 
-    //serial = new QSerialPort(this);
-    //serial->setPortName("com3");
-    //serial->setBaudRate(QSerialPort::Baud115200);
-    //serial->setDataBits(QSerialPort::Data8);
-    //serial->setParity(QSerialPort::NoParity);
-    //serial->setStopBits(QSerialPort::OneStop);
-    //serial->setFlowControl(QSerialPort::NoFlowControl);
+    serial = setting_window->getComSettings();
     //serial->open(QIODevice::ReadOnly);
-    //qDebug() << serial->portName();
+    connect(serial,&QSerialPort::readyRead,this ,&MainWindow::serialRecieve);
 
-    //connect(serial,SIGNAL(readyRead()),this,SLOT(serialRecieve()));
-
-    //foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
-    //{
-     //QSerialPort port;
-     //port.setPort(info);
-     //if(port.open(QIODevice::ReadWrite))
-     //{
-      //   qDebug() << "Name : " << info.portName();
-     //}
-    //}
-
-    //***********************************************************************
+    // **********************************************************************
 }
 
 MainWindow::~MainWindow()
 {
+    //qDebug() << serial->portName();
+    //qDebug() << serial->BaudRate();
     delete ui;
     serial->close();
     delete serial;
@@ -110,7 +100,8 @@ void MainWindow::serialRecieve()
        QString message = buffer.mid(0,index);
        buffer.remove(0,index+codeSize);
        splitMsg = message.split(" ");
-       //qDebug() << message;
+
+       qDebug() << serial->portName() << ": " << message;
        //qDebug() << "Temp: " << splitMsg[0];
        //qDebug() << "Hum: " << splitMsg[1];
        ui->lcdNumber->display(splitMsg[0]);
@@ -121,22 +112,23 @@ void MainWindow::serialRecieve()
 void MainWindow::on_save_measurement_triggered()
 {
     ui->statusbar->showMessage("Измерения сохранены!");
-    //QMessageBox::about(this, " ", "Измерения сохранены!");
-    //QLCDNumber::Mode mod = ui->lcdNumber->mode();
-    //QLCDNumber::SegmentStyle styl = ui->lcdNumber->segmentStyle();
-    //ui->lcdNumber->display(50);
-    //ui->lcdNumber->setDigitCount(50);
 
-    //ui->lcdNumber->setSegmentStyle(styl);
-    //ui->lcdNumber->setMode(mod);
+    //ui->lcdNumber->bindingStorage();
+    //db.viewDb();
+    //qDebug() << ui->lcdNumber->value();
+    db.addMeasurement(ui->lcdNumber->value(), ui->lcdNumber_2->value());
+}
 
+void MainWindow::on_plot_measurement_triggered()
+{
+    db.viewDb();
 }
 
 void MainWindow::on_set_com_triggered()
 {
   //qDebug() << setting_window->getString();
-  serial = setting_window->getComSettings();
-  qDebug() << serial->portName();
+  //serial = setting_window->getComSettings();
+  //qDebug() << serial->portName();
   setting_window->show();
 }
 
