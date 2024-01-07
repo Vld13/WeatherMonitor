@@ -13,6 +13,7 @@ DbManager::DbManager()
 
     if(!m_query.exec(
                 "CREATE TABLE measurements("
+                "id INT,"
                 "date  DATETIME NOT NULL,"
                 "temp INT NOT NULL,"
                 "hum INT NOT NULL"
@@ -40,6 +41,66 @@ void DbManager::addMeasurement(int temp, int hum)
     m_query.bindValue(":temp", temp);
     m_query.bindValue(":hum", hum);
     m_query.exec();
+}
+
+QVector<QString> DbManager::getDate()
+{
+    QSqlQuery m_query(m_db);
+    //m_query.prepare("SELECT * FROM measurements");
+    // Берем последние 10 записей
+    m_query.prepare("SELECT * FROM measurements ORDER BY date DESC LIMIT 10");
+    m_query.exec();
+
+    int idDate = m_query.record().indexOf("date");
+
+    m_date.clear();
+    while(m_query.next())
+    {
+        m_date.append(m_query.value(idDate).toString());
+        //int temp = m_query.value(idTemp).toInt();
+    }
+
+    return m_date;
+}
+
+QVector<double> DbManager::getTemp()
+{
+    QSqlQuery m_query(m_db);
+    //m_query.prepare("SELECT * FROM measurements");
+    // Берем последние 10 записей
+    m_query.prepare("SELECT * FROM measurements ORDER BY temp DESC LIMIT 10");
+    m_query.exec();
+
+    int idTemp = m_query.record().indexOf("temp");
+
+    m_temp.clear();
+    while(m_query.next())
+    {
+        m_temp.append(m_query.value(idTemp).toInt());
+        //int temp = m_query.value(idTemp).toInt();
+    }
+
+    return m_temp;
+}
+
+QVector<double> DbManager::getHum()
+{
+    QSqlQuery m_query(m_db);
+    //m_query.prepare("SELECT * FROM measurements");
+    // Берем последние 10 записей
+    m_query.prepare("SELECT * FROM measurements ORDER BY hum DESC LIMIT 10");
+    m_query.exec();
+
+    int idHum = m_query.record().indexOf("hum");
+
+    m_hum.clear();
+    while(m_query.next())
+    {
+        m_hum.append(m_query.value(idHum).toInt());
+        //int temp = m_query.value(idTemp).toInt();
+    }
+
+    return m_hum;
 }
 
 void DbManager::viewDb()

@@ -6,6 +6,7 @@
 #include <QSerialPortInfo>
 #include"settingwindow.h"
 #include "dbmanager.h"
+#include "plot.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,8 +31,9 @@ private slots:
 private:
     Ui::MainWindow* ui;
     SettingWindow* setting_window;
+    plot* plot_window;
     QSerialPort* serial;
-    DbManager db;
+    DbManager* db;
     QString buffer;
     QString code;
     int codeSize;

@@ -1,6 +1,6 @@
 QT       += core gui serialport sql
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++11
 
@@ -12,15 +12,20 @@ SOURCES += \
     dbmanager.cpp \
     main.cpp \
     mainwindow.cpp \
+    plot.cpp \
+    qcustomplot.cpp \
     settingwindow.cpp
 
 HEADERS += \
     dbmanager.h \
     mainwindow.h \
+    plot.h \
+    qcustomplot.h \
     settingwindow.h
 
 FORMS += \
     mainwindow.ui \
+    plot.ui \
     settingwindow.ui
 
 # Default rules for deployment.

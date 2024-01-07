@@ -4,7 +4,7 @@
 #include <QPalette>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-#include "dbmanager.h"
+//#include "dbmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,9 +12,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Окно настроек COM
     setting_window = new SettingWindow();
-
-    //DbManager db;
+    // Окно графиков
+    plot_window = new plot();
+    // Управление БД
+    db = new DbManager;
 
     // Фиксированный размер окна
     setFixedSize(width(), height());
@@ -116,12 +119,29 @@ void MainWindow::on_save_measurement_triggered()
     //ui->lcdNumber->bindingStorage();
     //db.viewDb();
     //qDebug() << ui->lcdNumber->value();
-    db.addMeasurement(ui->lcdNumber->value(), ui->lcdNumber_2->value());
+    db->addMeasurement(ui->lcdNumber->value(), ui->lcdNumber_2->value());
 }
 
 void MainWindow::on_plot_measurement_triggered()
 {
-    db.viewDb();
+    //db.viewDb();
+    QVector<QString> date = db->getDate();
+    QVector<double> temp = db->getTemp();
+    QVector<double> hum = db->getHum();
+    //qDebug() << date;
+    //qDebug() << temp;
+    //qDebug() << hum;
+
+    if(date.size() < 10)
+        QMessageBox::critical(this, "Внимание","Мало записей измерений!");
+    else {
+        // Создаем график
+        plot_window->plotGraph(date, temp, hum);
+        plot_window->show();
+    }
+    //date.clear();
+    //temp.clear();
+    //hum.clear();
 }
 
 void MainWindow::on_set_com_triggered()
