@@ -3,7 +3,8 @@
 DbManager::DbManager()
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("WeatherMonitor");
+    m_db.setDatabaseName("WM_DB");
+    //m_db.setDatabaseName("WeatherMonitor");
 
     if(!m_db.open()) {
         qDebug() << m_db.lastError().text();

@@ -8,6 +8,7 @@ plot::plot(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setWindowTitle("Plot");
 }
 
 plot::~plot()
@@ -17,18 +18,14 @@ plot::~plot()
 
 void plot::plotGraph(QVector<QString> date, QVector<double> temp, QVector<double> hum)
 {
-    qDebug() << date;
-    qDebug() << temp;
-    qDebug() << hum;
+    //qDebug() << date;
+    //qDebug() << temp;
+    //qDebug() << hum;
 
     // Переворачиваем векторы
     std::reverse(std::begin(date), std::end(date));
     std::reverse(std::begin(temp), std::end(temp));
     std::reverse(std::begin(hum), std::end(hum));
-
-    // Вычисляем количество точек, которые будем отрисовывать
-    int n = date.size();
-    qDebug() << n;
 
     // Очищаем все графики
     ui->widget->clearGraphs();

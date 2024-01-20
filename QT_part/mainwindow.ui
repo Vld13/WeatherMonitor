@@ -63,7 +63,7 @@
              <number>0</number>
             </property>
             <property name="intValue" stdset="0">
-             <number>40</number>
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -133,7 +133,7 @@
              <number>0</number>
             </property>
             <property name="intValue" stdset="0">
-             <number>31</number>
+             <number>0</number>
             </property>
            </widget>
           </item>

@@ -31,8 +31,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
   grid->addWidget(label_1, 0,0);
   grid->addWidget(combo_box_1, 0,1);
 
-  //qDebug() << combo_box_1->currentText();
-
   // Доступные скорости
   QLabel *label_2 = new QLabel("BaudRates:");
   //QComboBox *combo_box_2 = new QComboBox();
@@ -93,11 +91,7 @@ SettingWindow::SettingWindow(QWidget *parent) :
   grid->addWidget(save_btn, 7,1);
   connect(save_btn,&QPushButton::clicked,this,&SettingWindow::on_pushButton_clicked);
 
-  //grid->setRowStretch(7,2);
-
-  setLayout(grid);
-
-  //serialPort->setPortName("com1");
+  setLayout(grid); 
 }
 
 SettingWindow::~SettingWindow()
@@ -122,6 +116,7 @@ QSerialPort* SettingWindow::getComSettings()
 
 void SettingWindow::on_pushButton_clicked()
 {
+    serialPort->close();
     // Установка параметров COM с меню настроек
 
     QString portName = combo_box_1->currentText();
@@ -170,6 +165,7 @@ void SettingWindow::on_pushButton_clicked()
     else if(flowControl == "Software Flow Control")
       serialPort->setFlowControl(QSerialPort::SoftwareControl);
 
+    serialPort->open(QIODevice::ReadOnly);
     //qDebug() << combo_box_1->currentText();
 
     QMessageBox msgBox;

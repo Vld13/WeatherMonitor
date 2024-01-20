@@ -77,18 +77,17 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    //qDebug() << serial->portName();
-    //qDebug() << serial->BaudRate();
     delete ui;
     serial->close();
     delete serial;
-    //qDebug() << "Destructor";
+
 }
 
 void MainWindow::serialRecieve()
 {   
     QByteArray dataBA = serial->readAll();
     QString data(dataBA);
+    //qDebug() << data;
 
     QList<QString> splitMsg;
 
@@ -105,8 +104,6 @@ void MainWindow::serialRecieve()
        splitMsg = message.split(" ");
 
        qDebug() << serial->portName() << ": " << message;
-       //qDebug() << "Temp: " << splitMsg[0];
-       //qDebug() << "Hum: " << splitMsg[1];
        ui->lcdNumber->display(splitMsg[0]);
        ui->lcdNumber_2->display(splitMsg[1]);
     }
@@ -116,9 +113,6 @@ void MainWindow::on_save_measurement_triggered()
 {
     ui->statusbar->showMessage("Измерения сохранены!");
 
-    //ui->lcdNumber->bindingStorage();
-    //db.viewDb();
-    //qDebug() << ui->lcdNumber->value();
     db->addMeasurement(ui->lcdNumber->value(), ui->lcdNumber_2->value());
 }
 
@@ -146,22 +140,16 @@ void MainWindow::on_plot_measurement_triggered()
 
 void MainWindow::on_set_com_triggered()
 {
-  //qDebug() << setting_window->getString();
-  //serial = setting_window->getComSettings();
-  //qDebug() << serial->portName();
   setting_window->show();
 }
 
 void MainWindow::on_about_triggered()
 {
-    //QPixmap aboutpix("D:/projects/WeatherMonitor/QT_part/res/img/about.png");
-
     QMessageBox msgBox;
     msgBox.setText("Программа показывает текущие температуру и влажность.\n"
-                   "Период считывания данных 5 сек.\n"
+                   "Есть возможность сохранение данных в БД(SQLITE).\n"
                    "Для корректной работы небходимо выбрать и настроить COM порт.");
 
-    //msgBox.setIconPixmap(aboutpix);
     msgBox.setIcon(QMessageBox::Information);
     msgBox.exec();
 }

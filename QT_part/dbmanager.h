@@ -21,7 +21,7 @@ class DbManager
     public:
         DbManager();
         ~DbManager();
-        void addMeasurement(int, int);
+        void addMeasurement(int, int); // Добавляем записи в БД
         QVector<QString> getDate(); // Берем последние 10 записей
         QVector<double> getTemp();
         QVector<double> getHum();
