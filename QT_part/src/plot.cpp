@@ -18,10 +18,6 @@ plot::~plot()
 
 void plot::plotGraph(QVector<QString> date, QVector<double> temp, QVector<double> hum)
 {
-    //qDebug() << date;
-    //qDebug() << temp;
-    //qDebug() << hum;
-
     // Переворачиваем векторы
     std::reverse(std::begin(date), std::end(date));
     std::reverse(std::begin(temp), std::end(temp));

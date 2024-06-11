@@ -4,7 +4,6 @@ DbManager::DbManager()
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("WM_DB");
-    //m_db.setDatabaseName("WeatherMonitor");
 
     if(!m_db.open()) {
         qDebug() << m_db.lastError().text();
@@ -32,7 +31,6 @@ DbManager::~DbManager()
 void DbManager::addMeasurement(int temp, int hum)
 {
     QDateTime currentDateTime = QDateTime::currentDateTime();
-    //QString formattedDateTime = currentDateTime.toString("yyyy.MM.dd hh:mm:ss");
 
     QSqlQuery m_query(m_db);
 
@@ -47,7 +45,6 @@ void DbManager::addMeasurement(int temp, int hum)
 QVector<QString> DbManager::getDate()
 {
     QSqlQuery m_query(m_db);
-    //m_query.prepare("SELECT * FROM measurements");
     // Берем последние 10 записей
     m_query.prepare("SELECT * FROM measurements ORDER BY date DESC LIMIT 10");
     m_query.exec();
@@ -58,7 +55,6 @@ QVector<QString> DbManager::getDate()
     while(m_query.next())
     {
         m_date.append(m_query.value(idDate).toString());
-        //int temp = m_query.value(idTemp).toInt();
     }
 
     return m_date;
@@ -67,7 +63,6 @@ QVector<QString> DbManager::getDate()
 QVector<double> DbManager::getTemp()
 {
     QSqlQuery m_query(m_db);
-    //m_query.prepare("SELECT * FROM measurements");
     // Берем последние 10 записей
     m_query.prepare("SELECT * FROM measurements ORDER BY temp DESC LIMIT 10");
     m_query.exec();
@@ -78,7 +73,6 @@ QVector<double> DbManager::getTemp()
     while(m_query.next())
     {
         m_temp.append(m_query.value(idTemp).toInt());
-        //int temp = m_query.value(idTemp).toInt();
     }
 
     return m_temp;
@@ -87,7 +81,6 @@ QVector<double> DbManager::getTemp()
 QVector<double> DbManager::getHum()
 {
     QSqlQuery m_query(m_db);
-    //m_query.prepare("SELECT * FROM measurements");
     // Берем последние 10 записей
     m_query.prepare("SELECT * FROM measurements ORDER BY hum DESC LIMIT 10");
     m_query.exec();
@@ -98,7 +91,6 @@ QVector<double> DbManager::getHum()
     while(m_query.next())
     {
         m_hum.append(m_query.value(idHum).toInt());
-        //int temp = m_query.value(idTemp).toInt();
     }
 
     return m_hum;

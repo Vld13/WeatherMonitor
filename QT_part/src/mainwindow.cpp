@@ -4,7 +4,6 @@
 #include <QPalette>
 #include <QSerialPort>
 #include <QSerialPortInfo>
-//#include "dbmanager.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,11 +21,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Фиксированный размер окна
     setFixedSize(width(), height());
     setWindowTitle("Weather Monitor");
-    //setWindowIcon(QIcon("D:/projects/WeatherMonitor/QT_part/res/img/icon.ico"));
 
     // Установка фона *******************************************************
 
-    QPixmap bkgnd("D:/projects/WeatherMonitor/QT_part/res/img/background.jpg");
+    QPixmap bkgnd("add/path/to/background");
     bkgnd = bkgnd.scaled(size(), Qt::IgnoreAspectRatio);
     QPalette p = palette();
     p.setBrush(QPalette::Window, bkgnd);
@@ -69,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent)
     // Настройка COM ********************************************************
 
     serial = setting_window->getComSettings();
-    //serial->open(QIODevice::ReadOnly);
     connect(serial,&QSerialPort::readyRead,this ,&MainWindow::serialRecieve);
 
     // **********************************************************************
@@ -87,7 +84,6 @@ void MainWindow::serialRecieve()
 {   
     QByteArray dataBA = serial->readAll();
     QString data(dataBA);
-    //qDebug() << data;
 
     QList<QString> splitMsg;
 
@@ -118,13 +114,9 @@ void MainWindow::on_save_measurement_triggered()
 
 void MainWindow::on_plot_measurement_triggered()
 {
-    //db.viewDb();
     QVector<QString> date = db->getDate();
     QVector<double> temp = db->getTemp();
     QVector<double> hum = db->getHum();
-    //qDebug() << date;
-    //qDebug() << temp;
-    //qDebug() << hum;
 
     if(date.size() < 10)
         QMessageBox::critical(this, "Внимание","Мало записей измерений!");
@@ -133,9 +125,6 @@ void MainWindow::on_plot_measurement_triggered()
         plot_window->plotGraph(date, temp, hum);
         plot_window->show();
     }
-    //date.clear();
-    //temp.clear();
-    //hum.clear();
 }
 
 void MainWindow::on_set_com_triggered()

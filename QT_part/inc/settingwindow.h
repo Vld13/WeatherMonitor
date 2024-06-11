@@ -20,7 +20,6 @@ public:
     ~SettingWindow();
     QString getString();
     QSerialPort* getComSettings();
-    //QComboBox* combo_box_1;
 
 signals:
     void firstWindow();  // Сигнал для первого окна на открытие

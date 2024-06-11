@@ -20,7 +20,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Доступные порты
   QLabel *label_1 = new QLabel("COM:");
-  // QComboBox *combo_box_1 = new QComboBox();
   combo_box_1 = new QComboBox();
   QList<QSerialPortInfo> ports = info.availablePorts();
   QList<QString> stringPorts;
@@ -33,7 +32,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Доступные скорости
   QLabel *label_2 = new QLabel("BaudRates:");
-  //QComboBox *combo_box_2 = new QComboBox();
   combo_box_2 = new QComboBox();
   QList<qint32> baudRates = info.standardBaudRates();
   QList<QString> stringBaudRates;
@@ -46,7 +44,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Бит данных
   QLabel *label_3 = new QLabel("Data bits:");
-  //QComboBox *combo_box_3 = new QComboBox();
   combo_box_3 = new QComboBox();
   combo_box_3->addItem("5");
   combo_box_3->addItem("6");
@@ -57,7 +54,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Стоп бит
   QLabel *label_4 = new QLabel("Stop bits:");
-  //QComboBox *combo_box_4 = new QComboBox();
   combo_box_4 = new QComboBox();
   combo_box_4->addItem("1 Bit");
   combo_box_4->addItem("1,5 Bits");
@@ -67,7 +63,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Четность
   QLabel *label_5 = new QLabel("Parities:");
-  //QComboBox *combo_box_5 = new QComboBox();
   combo_box_5 = new QComboBox();
   combo_box_5->addItem("No Parity");
   combo_box_5->addItem("Even Parity");
@@ -79,7 +74,6 @@ SettingWindow::SettingWindow(QWidget *parent) :
 
   // Flow Controls
   QLabel *label_6 = new QLabel("Flow Controls:");
-  //QComboBox *combo_box_6 = new QComboBox();
   combo_box_6 = new QComboBox();
   combo_box_6->addItem("No Flow Control");
   combo_box_6->addItem("Hardware Flow Control");
@@ -166,7 +160,6 @@ void SettingWindow::on_pushButton_clicked()
       serialPort->setFlowControl(QSerialPort::SoftwareControl);
 
     serialPort->open(QIODevice::ReadOnly);
-    //qDebug() << combo_box_1->currentText();
 
     QMessageBox msgBox;
     msgBox.setWindowTitle(" ");

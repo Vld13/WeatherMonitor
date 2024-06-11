@@ -3,12 +3,12 @@
 
 #include "main.h"
 
-/* Настройки */
 #define DHT_TIMEOUT 				10000	//Количество итераций, после которых функция вернёт пустые значения
 #define DHT_POLLING_CONTROL			1		//Включение проверки частоты опроса датчика
 #define DHT_POLLING_INTERVAL_DHT11	2000	//Интервал опроса DHT11 (0.5 Гц по даташиту). Можно поставить 1500, будет работать
 #define DHT_POLLING_INTERVAL_DHT22	1000	//Интервал опроса DHT22 (1 Гц по даташиту)
 #define DHT_IRQ_CONTROL						//Выключать прерывания во время обмена данных с датчиком
+
 /* Структура возвращаемых датчиком данных */
 typedef struct {
 	float hum;
@@ -37,7 +37,6 @@ typedef struct {
 } DHT_sensor;
 
 
-/* Прототипы функций */
-DHT_data DHT_getData(DHT_sensor *sensor); //Получить данные с датчика
+DHT_data DHT_getData(DHT_sensor *sensor);
 
 #endif
