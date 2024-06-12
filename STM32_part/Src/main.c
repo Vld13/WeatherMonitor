@@ -10,9 +10,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 
-void printWelcomeMessage(void);
-uint8_t readUserInput(void);
-uint8_t processUserInput(uint8_t, DHT_data d);
 
 int main(void)
 {

@@ -1,9 +1,5 @@
 #include "DHT.h"
 
-#define lineDown() 		HAL_GPIO_WritePin(sensor->DHT_Port, sensor->DHT_Pin, GPIO_PIN_RESET)
-#define lineUp()		HAL_GPIO_WritePin(sensor->DHT_Port, sensor->DHT_Pin, GPIO_PIN_SET)
-#define getLine()		(HAL_GPIO_ReadPin(sensor->DHT_Port, sensor->DHT_Pin) == GPIO_PIN_SET)
-#define Delay(d)		HAL_Delay(d)
 
 static void goToOutput(DHT_sensor *sensor) {
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
